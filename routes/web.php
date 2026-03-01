@@ -1,26 +1,25 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\WelcomeController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\PhotoController;
+
 
 // Langkah 2: Route Hello
-Route::get('/hello', function () {
-    return 'Hello World';
-});
+Route::get('/hello', [WelcomeController::class, 'hello']);
 
 // Langkah 4: Route World
 Route::get('/world', function () {
     return 'World';
 });
 
-// Langkah 6: Route Selamat Datang
-Route::get('/', function () {
-    return 'Selamat Datang';
-});
-
-// Langkah 7: Route About (NIM dan Nama)
-Route::get('/about', function () {
-    return 'NIM: 244107020051 <br> Nama: Fanani'; 
-});
+// Langkah 7: Modifikasi dengan Single Action Controller
+Route::get('/', HomeController::class);
+Route::get('/about', AboutController::class);
+Route::get('/articles/{id}', ArticleController::class);
 
 // Langkah 8: Satu parameter
 Route::get('/user/{name}', function ($name) {
@@ -32,11 +31,6 @@ Route::get('/posts/{post}/comments/{comment}', function ($postId, $commentId) {
     return 'Pos ke-'.$postId." Komentar ke-: ".$commentId;
 });
 
-// Langkah 13: Tugas Mandiri
-Route::get('/articles/{id}', function ($id) {
-    return "Halaman Artikel dengan ID " . $id;
-});
-
 // Langkah 14: Default null
 Route::get('/user/{name?}', function ($name=null) {
     return 'Nama saya '.$name;
@@ -46,3 +40,11 @@ Route::get('/user/{name?}', function ($name=null) {
 Route::get('/user/{name?}', function ($name='Fanani') {
     return 'Nama saya '.$name;
 });
+
+Route::resource('photos', PhotoController::class)->only([ 
+'index', 'show' 
+]); 
+
+Route::resource('photos', PhotoController::class)->except([ 
+'create', 'store', 'update', 'destroy' 
+]);
